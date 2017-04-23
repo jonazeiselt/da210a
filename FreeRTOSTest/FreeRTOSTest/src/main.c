@@ -40,8 +40,14 @@ int main(void)
 		printf("Failed to create test blink task\r\n");
 	}
 	
+	/* Create task with blinking Red LED */
+	if (xTaskCreate(vRedTask, "Red led task", STACK_SIZE, NULL, 3, NULL) != pdPASS)
+	{
+		printf("Failed to create test red task\r\n");
+	}
+	
 	/* Create task which reads button */
-	if (xTaskCreate(vButtonTask, "Button handler task", STACK_SIZE, NULL, 4, NULL) != pdPASS)
+	if (xTaskCreate(vButtonTask, "Button handler task", STACK_SIZE, NULL, 5, NULL) != pdPASS)
 	{
 		printf("Failed to create test button task\r\n");
 	}

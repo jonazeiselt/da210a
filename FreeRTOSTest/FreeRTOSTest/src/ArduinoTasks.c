@@ -5,6 +5,7 @@
 * Author: Jonas Eiselt
 *
 * Further reading: Mastering the FreeRTOS Real Time Kernel: A Hands-On Tutorial Guide by Richard Barry
+* http://asf.atmel.com/docs/latest/sam.drivers.usart.usart_synchronous_example.sam3u_ek/html/sam_pio_quickstart_use_case_2.html
 */
 
 #include <asf.h>
@@ -97,6 +98,25 @@ void vReadTask(void *pvParameters)
 	}
 }
 
+void vRedTask(void *pvParameters) 
+{
+	portTickType xLastWakeTime;
+	const portTickType xTimeIncrement = 1000;
+	
+	xLastWakeTime = xTaskGetTickCount(); /* Initialize the xLastWakeTime variable with the current time. */
+	
+	uint32_t toggle = 0;
+	pinMode(24, 1); 
+	
+	while (1)
+	{
+		vTaskDelayUntil(&xLastWakeTime, xTimeIncrement); /* Wait for the next cycle. */
+		
+		toggle = !toggle;
+		digitalWrite(24, toggle);
+	}
+}
+
 /* naming convention p. 22 in Mastering the FreeRTOS Real Time Kernel */
 void vButtonTask(void *pvParameters)
 {
@@ -120,15 +140,14 @@ void vButtonTask(void *pvParameters)
 			pio_clear(PIOA, PIO_PA19);
 			toggle = 1;
 		}
-		vTaskDelay((100/portTICK_RATE_MS));
+		vTaskDelay((200/portTICK_RATE_MS));
 		xSemaphoreTake(xBinarySemaphore, 0);
 	}
 }
 
 /*
-* Interrupt handler (p. 200)
-* http://asf.atmel.com/docs/latest/sam.drivers.usart.usart_synchronous_example.sam3u_ek/html/sam_pio_quickstart_use_case_2.html
-*/
+ * Interrupt handler (p. 200)
+ */
 void vButtonInterruptHandler(void)
 {
 	short xHigherPriorityTaskWoken = pdFALSE;

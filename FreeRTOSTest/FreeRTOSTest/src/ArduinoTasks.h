@@ -7,7 +7,6 @@
  * Modified: Jonas Eiselt
  */ 
 
-
 #ifndef ARDUINOTASKS_H_
 #define ARDUINOTASKS_H_
 
@@ -20,6 +19,8 @@ void vLEDTask(void *pvParameters);
 void vBlinkTask(void *pvParameters);
 
 void vReadTask(void *pvParameters);
+
+void vRedTask(void *pvParameters);
 
 void vButtonTask(void *pvParameters);
 
