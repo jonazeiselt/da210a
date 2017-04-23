@@ -1,54 +1,54 @@
 /*
- * ArduinoTasks.c
- *
- * Created: 2016-12-14
- * Author: Axel Lundberg and Jonas Eiselt
- *
- * Code from assignment (Laboration 1601f)
- *
- * Modified: Jonas Eiselt
- */ 
+* ArduinoTasks.c
+*
+* Created: 2016-12-14
+* Author: Jonas Eiselt
+*
+* Further reading: Mastering the FreeRTOS Real Time Kernel: A Hands-On Tutorial Guide by Richard Barry
+*/
 
 #include <asf.h>
 #include <inttypes.h>
 #include "ArduinoDue.h"
 #include "ArduinoTasks.h"
 
+static xSemaphoreHandle xBinarySemaphore;
+
 /**
- *  This tasks makes the on-board LED blink every second
- */
-void task_led(void *pvParameters)
+*  This tasks makes the on-board LED blink every second
+*/
+void vLEDTask(void *pvParameters)
 {
 	portTickType xLastWakeTime;
-    const portTickType xTimeIncrement = 500;
-    
+	const portTickType xTimeIncrement = 500;
+	
 	xLastWakeTime = xTaskGetTickCount(); /* Initialize the xLastWakeTime variable with the current time. */
-   
+	
 	pinMode(LED_RX, 1);
-    
-    uint32_t toggle = 1;
-    while (1)
-    {
-	    vTaskDelayUntil(&xLastWakeTime, xTimeIncrement); /* Wait for the next cycle. */
-	    
-	    if (toggle == 1)
-	    {
-		    toggle = 0;
-	    }
-	    else
-	    {
-		    toggle = 1;
-	    }
-	    digitalWrite(LED_RX, toggle);
-    }
+	
+	uint32_t toggle = 1;
+	while (1)
+	{
+		vTaskDelayUntil(&xLastWakeTime, xTimeIncrement); /* Wait for the next cycle. */
+		
+		if (toggle == 1)
+		{
+			toggle = 0;
+		}
+		else
+		{
+			toggle = 1;
+		}
+		digitalWrite(LED_RX, toggle);
+	}
 }
 
-void task_blink(void *pvParameters)
+void vBlinkTask(void *pvParameters)
 {
 	portTickType xLastWakeTime;
-	const portTickType xTimeIncrement = 500; /* 1000 ms in between */
+	const portTickType xTimeIncrement = 500;
 	
-	xLastWakeTime = xTaskGetTickCount(); 
+	xLastWakeTime = xTaskGetTickCount();
 	
 	pinMode(23, 1);
 	
@@ -61,7 +61,7 @@ void task_blink(void *pvParameters)
 		{
 			toggle = 0;
 		}
-		else 
+		else
 		{
 			toggle = 1;
 		}
@@ -69,15 +69,15 @@ void task_blink(void *pvParameters)
 	}
 }
 
-void task_button(void *pvParameters) 
+void vReadTask(void *pvParameters)
 {
 	portTickType xLastWakeTime;
-	const portTickType xTimeIncrement = 4000; /* The bigger value, the bigger latency */ 
+	const portTickType xTimeIncrement = 4000; /* The bigger value, the bigger latency */
 	
 	xLastWakeTime = xTaskGetTickCount(); /* Initialize the xLastWakeTime variable with the current time. */
 	
 	pinMode(24, 1); // 1 = output, 0 = input
-	pinMode(31, 0); 
+	pinMode(31, 0);
 	
 	while (1)
 	{
@@ -93,6 +93,39 @@ void task_button(void *pvParameters)
 		else
 		{
 			digitalWrite(24, 0);
+		}
+	}
+}
+
+/* p. 22 in Mastering the FreeRTOS Real Time Kernel */
+void vButtonTask(void *pvParameters)
+{
+	pio_set_output(PIOA, PIO_PA19, LOW, DISABLE, ENABLE);
+	while (1)
+	{
+		xSemaphoreTake(xBinarySemaphore, portMAX_DELAY);
+
+		/* Button pressed! */
+		pio_toggle_pin(PIO_PA19);
+		printf("Button pressed!");
+	}
+}
+
+/*
+ * Interrupt handler (p. 200)
+ * http://asf.atmel.com/docs/latest/sam.drivers.usart.usart_synchronous_example.sam3u_ek/html/sam_pio_quickstart_use_case_2.html
+ */
+void vButtonInterruptHandler(const uint32_t id, const uint32_t index)
+{
+	if ((id == ID_PIOA) && (index == PIO_PA16))
+	{
+		if (pio_get(PIOA, PIO_TYPE_PIO_INPUT, PIO_PA16))
+		{
+			pio_clear(PIOA, PIO_PA19); // pin 42
+		}
+		else
+		{
+			pio_set(PIOA, PIO_PA19);
 		}
 	}
 }

@@ -13,19 +13,16 @@
 
 #define LED_RX 73
 
-#define TASK_LED_STACK_SIZE     (1024/sizeof(portSTACK_TYPE))
-#define TASK_LED_STACK_PRIORITY     (1)
+#define STACK_SIZE     (1024/sizeof(portSTACK_TYPE))
 
-#define TASK_BLINK_STACK_SIZE     (1024/sizeof(portSTACK_TYPE))
-#define TASK_BLINK_STACK_PRIORITY     (2)
+void vLEDTask(void *pvParameters);
 
-#define TASK_BUTTON_STACK_SIZE     (1024/sizeof(portSTACK_TYPE))
-#define TASK_BUTTON_STACK_PRIORITY     (3)
+void vBlinkTask(void *pvParameters);
 
-void task_led(void *pvParameters);
+void vReadTask(void *pvParameters);
 
-void task_blink(void *pvParameters);
+void vButtonTask(void *pvParameters);
 
-void task_button(void *pvParameters);
+void vButtonInterruptHandler(const uint32_t, const uint32_t);
 
 #endif /* ARDUINOTASKS_H_ */
