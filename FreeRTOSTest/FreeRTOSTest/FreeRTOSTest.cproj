@@ -529,6 +529,12 @@
     <Folder Include="src\config\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\ArduinoDue.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\ArduinoDue.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\ASF\thirdparty\freertos\freertos-7.3.0\source\FreeRTOS_CLI.c">
       <SubType>compile</SubType>
     </Compile>
@@ -538,10 +544,10 @@
     <Compile Include="src\consoleFunctions.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\TaskLED.c">
+    <Compile Include="src\ArduinoTasks.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\TaskLED.h">
+    <Compile Include="src\ArduinoTasks.h">
       <SubType>compile</SubType>
     </Compile>
     <None Include="src\config\FreeRTOSConfig.h">

@@ -2,11 +2,13 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
+src\ArduinoDue.c
+
 src\ASF\thirdparty\freertos\freertos-7.3.0\source\FreeRTOS_CLI.c
 
 src\consoleFunctions.c
 
-src\TaskLED.c
+src\ArduinoTasks.c
 
 src\ASF\thirdparty\freertos\freertos-7.3.0\source\list.c
 

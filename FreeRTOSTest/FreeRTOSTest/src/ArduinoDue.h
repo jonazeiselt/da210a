@@ -11,10 +11,10 @@
 #ifndef ARDUINODUE_H_
 #define ARDUINODUE_H_
 
-void pinMode(int pin, int mode);
+void pinMode(uint32_t pin, uint32_t mode);
 
-void digitalWrite(int pin, int value);
+void digitalWrite(uint32_t pin, uint32_t value);
 
-uint32_t digitalRead(int pin);
+uint32_t digitalRead(uint32_t pin);
 
 #endif /* ARDUINODUE_H_ */
