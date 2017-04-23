@@ -23,6 +23,6 @@ void vReadTask(void *pvParameters);
 
 void vButtonTask(void *pvParameters);
 
-void vButtonInterruptHandler(const uint32_t, const uint32_t);
+void vButtonInterruptHandler(void);
 
 #endif /* ARDUINOTASKS_H_ */

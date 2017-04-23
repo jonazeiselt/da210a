@@ -15,8 +15,8 @@
 static xSemaphoreHandle xBinarySemaphore;
 
 /**
-*  This tasks makes the on-board LED blink every second
-*/
+ *  This tasks makes the on-board LED blink every second
+ */
 void vLEDTask(void *pvParameters)
 {
 	portTickType xLastWakeTime;
@@ -97,35 +97,43 @@ void vReadTask(void *pvParameters)
 	}
 }
 
-/* p. 22 in Mastering the FreeRTOS Real Time Kernel */
+/* naming convention p. 22 in Mastering the FreeRTOS Real Time Kernel */
 void vButtonTask(void *pvParameters)
 {
-	pio_set_output(PIOA, PIO_PA19, LOW, DISABLE, ENABLE);
+	vSemaphoreCreateBinary(xBinarySemaphore);
+	
+	uint32_t toggle = 0;
 	while (1)
 	{
+		printf("Waiting for button to be pressed\r\n");
 		xSemaphoreTake(xBinarySemaphore, portMAX_DELAY);
 
 		/* Button pressed! */
-		pio_toggle_pin(PIO_PA19);
-		printf("Button pressed!");
+		printf("Wait is over! Button was pressed\r\n");
+		if (toggle)
+		{
+			pio_set(PIOA, PIO_PA19);
+			toggle = 0;
+		}
+		else
+		{
+			pio_clear(PIOA, PIO_PA19);
+			toggle = 1;
+		}
+		vTaskDelay((100/portTICK_RATE_MS));
+		xSemaphoreTake(xBinarySemaphore, 0);
 	}
 }
 
 /*
- * Interrupt handler (p. 200)
- * http://asf.atmel.com/docs/latest/sam.drivers.usart.usart_synchronous_example.sam3u_ek/html/sam_pio_quickstart_use_case_2.html
- */
-void vButtonInterruptHandler(const uint32_t id, const uint32_t index)
+* Interrupt handler (p. 200)
+* http://asf.atmel.com/docs/latest/sam.drivers.usart.usart_synchronous_example.sam3u_ek/html/sam_pio_quickstart_use_case_2.html
+*/
+void vButtonInterruptHandler(void)
 {
-	if ((id == ID_PIOA) && (index == PIO_PA16))
-	{
-		if (pio_get(PIOA, PIO_TYPE_PIO_INPUT, PIO_PA16))
-		{
-			pio_clear(PIOA, PIO_PA19); // pin 42
-		}
-		else
-		{
-			pio_set(PIOA, PIO_PA19);
-		}
-	}
+	short xHigherPriorityTaskWoken = pdFALSE;
+	
+	xSemaphoreGiveFromISR(xBinarySemaphore, &xHigherPriorityTaskWoken);
+	
+	portYIELD();
 }

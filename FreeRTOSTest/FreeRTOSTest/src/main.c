@@ -7,7 +7,6 @@
 #include "consoleFunctions.h"
 #include "ArduinoTasks.h"
 
-/* http://asf.atmel.com/docs/latest/sam.drivers.usart.usart_synchronous_example.sam3u_ek/html/sam_pio_quickstart_use_case_2.html */
 void configure_button();
 
 int main(void)
@@ -20,15 +19,15 @@ int main(void)
 	configure_console();
 	
 	pio_set_output(PIOA, PIO_PA19, LOW, DISABLE, ENABLE);
-	
+
 	/* Initialize button with its own interrupt */
 	configure_button();
-		
+	
 	/* Print demo information on the terminal*/
-	printf("-- FreeRTOS Exemple – Tasks --\n\r");
+	printf("-- FreeRTOS Example – Tasks --\n\r");
 	printf("-- %s\n\r", BOARD_NAME);
 	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
-		
+	
 	/* Create task with blinking TX-LED */
 	if (xTaskCreate(vLEDTask, "Blink RX task", STACK_SIZE, NULL, 1, NULL) != pdPASS)
 	{
@@ -40,20 +39,21 @@ int main(void)
 	{
 		printf("Failed to create test blink task\r\n");
 	}
-
-// 	/* Create task which reads button */
-// 	if (xTaskCreate(vReadTask, "Read button task", STACK_SIZE, NULL, 3, NULL) != pdPASS)
-// 	{
-// 		printf("Failed to create test button task\r\n");
-// 	}
 	
+	/* Create task which reads button */
+	if (xTaskCreate(vButtonTask, "Button handler task", STACK_SIZE, NULL, 4, NULL) != pdPASS)
+	{
+		printf("Failed to create test button task\r\n");
+	}
+
 	/* Start the FreeRTOS scheduler running all tasks indefinitely*/
 	vTaskStartScheduler();
-
+	
 	/* The program should only end up here if there isn't enough memory to create the idle task */
 	while (1);
 }
 
+/* Attach interrupt to button (A0) */
 void configure_button()
 {
 	pio_set_input(PIOA, PIO_PA16, PIO_PULLUP);
