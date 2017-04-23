@@ -5,6 +5,8 @@
  * Author: Axel Lundberg and Jonas Eiselt
  *
  * Code from assignment (Laboration 1601f)
+ *
+ * Modified: Jonas Eiselt
  */ 
 
 #include <asf.h>
@@ -24,7 +26,5 @@ void task_led(void *pvParameters)
 	{
         vTaskDelayUntil(&xLastWakeTime, xTimeIncrement); /* Wait for the next cycle. */
         gpio_toggle_pin(LED0_GPIO);
-		
-		printf("Hello\n");
     }
 }

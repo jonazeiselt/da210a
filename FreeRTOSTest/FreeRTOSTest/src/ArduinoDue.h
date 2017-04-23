@@ -3,6 +3,8 @@
  *
  * Created: 2017-04-23 12:12:25
  * Author: Jonas Eiselt
+ *
+ * Modified code from Task1501f in Inbyggda system och signaler
  */ 
 
 
