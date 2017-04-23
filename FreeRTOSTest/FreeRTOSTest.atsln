@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "FreeRTOSTest", "FreeRTOSTest\FreeRTOSTest.cproj", "{DC66FD73-29A3-40CF-9A03-08B5284F20B7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Release|ARM = Release|ARM
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC66FD73-29A3-40CF-9A03-08B5284F20B7}.Debug|ARM.ActiveCfg = Debug|ARM
+		{DC66FD73-29A3-40CF-9A03-08B5284F20B7}.Debug|ARM.Build.0 = Debug|ARM
+		{DC66FD73-29A3-40CF-9A03-08B5284F20B7}.Release|ARM.ActiveCfg = Release|ARM
+		{DC66FD73-29A3-40CF-9A03-08B5284F20B7}.Release|ARM.Build.0 = Release|ARM
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
